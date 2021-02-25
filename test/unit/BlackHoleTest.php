@@ -9,6 +9,7 @@
 namespace LaminasTest\Cache\Storage\Adapter;
 
 use Laminas\Cache\Storage\Adapter\BlackHole;
+use Laminas\Cache\Storage\Adapter\BlackHoleOptions;
 use Laminas\Cache\Storage\AdapterPluginManager;
 use Laminas\Cache\StorageFactory;
 use Laminas\ServiceManager\ServiceManager;
@@ -168,5 +169,46 @@ class BlackHoleTest extends TestCase
     {
         $this->assertInstanceOf('Laminas\Cache\Storage\TotalSpaceCapableInterface', $this->storage);
         $this->assertSame(0, $this->storage->getTotalSpace());
+    }
+
+    public function testSupportedDataTypes()
+    {
+        $capabilities = $this->storage->getCapabilities();
+        $supportedDataTypes = $capabilities->getSupportedDatatypes();
+        $this->assertNotEmpty($supportedDataTypes);
+        foreach ($supportedDataTypes as $supportedDataType) {
+            $this->assertTrue($supportedDataType);
+        }
+    }
+
+    public function testSetOptionsCreatesBlackHoleOptions()
+    {
+        $this->storage->setOptions([]);
+        $this->assertInstanceOf(BlackHoleOptions::class, $this->storage->getOptions());
+    }
+
+    public function testGetOptionsReturnsBlackHoleOptions()
+    {
+        $this->assertInstanceOf(BlackHoleOptions::class, $this->storage->getOptions());
+    }
+
+    public function testConstructorPassesBlackHoleOptions()
+    {
+        $cache = new BlackHole(['psr' => true]);
+        $options = $cache->getOptions();
+        $this->assertInstanceOf(BlackHoleOptions::class, $options);
+        $this->assertTrue($options->isPsrCompatible());
+    }
+
+    public function testFlushReturnsTrueWhenPsrCompatibilityIsEnabled()
+    {
+        $cache = new BlackHole(['psr' => true]);
+        $this->assertTrue($cache->flush());
+    }
+
+    public function testClearByNamespaceReturnsTrueWhenPsrCompatibilityIsEnabled()
+    {
+        $cache = new BlackHole(['psr' => true]);
+        $this->assertTrue($cache->clearByNamespace('foo'));
     }
 }

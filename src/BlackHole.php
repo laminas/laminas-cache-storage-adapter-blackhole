@@ -50,7 +50,7 @@ class BlackHole implements
     /**
      * options
      *
-     * @var null|AdapterOptions
+     * @var null|BlackHoleOptions
      */
     protected $options;
 
@@ -75,8 +75,8 @@ class BlackHole implements
     public function setOptions($options)
     {
         if ($this->options !== $options) {
-            if (! $options instanceof AdapterOptions) {
-                $options = new AdapterOptions($options);
+            if (! $options instanceof BlackHoleOptions) {
+                $options = new BlackHoleOptions($options);
             }
 
             if ($this->options) {
@@ -91,12 +91,12 @@ class BlackHole implements
     /**
      * Get options
      *
-     * @return AdapterOptions
+     * @return BlackHoleOptions
      */
     public function getOptions()
     {
         if (! $this->options) {
-            $this->setOptions(new AdapterOptions());
+            $this->setOptions(new BlackHoleOptions());
         }
         return $this->options;
     }
@@ -353,9 +353,24 @@ class BlackHole implements
     public function getCapabilities()
     {
         if ($this->capabilities === null) {
+            $options = $this->getOptions();
             // use default capabilities only
             $this->capabilityMarker = new stdClass();
-            $this->capabilities     = new Capabilities($this, $this->capabilityMarker);
+            $this->capabilities     = new Capabilities($this, $this->capabilityMarker, [
+                'supportedDatatypes' => [
+                    'NULL'     => true,
+                    'boolean'  => true,
+                    'integer'  => true,
+                    'double'   => true,
+                    'string'   => true,
+                    'array'    => true,
+                    'object'   => true,
+                    'resource' => true,
+                    'light'    => true
+                ],
+                'staticTtl' => $options->isPsrCompatible(),
+                'minTtl' => (int) $options->isPsrCompatible()
+            ]);
         }
         return $this->capabilities;
     }
@@ -382,6 +397,10 @@ class BlackHole implements
      */
     public function clearByNamespace($namespace)
     {
+        if ($this->getOptions()->isPsrCompatible()) {
+            return true;
+        }
+
         return false;
     }
 
@@ -419,6 +438,10 @@ class BlackHole implements
      */
     public function flush()
     {
+        if ($this->getOptions()->isPsrCompatible()) {
+            return true;
+        }
+
         return false;
     }
 
