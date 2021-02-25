@@ -366,7 +366,6 @@ class BlackHole implements
                     'array'    => true,
                     'object'   => true,
                     'resource' => true,
-                    'light'    => true
                 ],
                 'staticTtl' => $options->isPsrCompatible(),
                 'minTtl' => (int) $options->isPsrCompatible()
