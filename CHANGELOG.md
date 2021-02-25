@@ -2,27 +2,24 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
-## 1.1.0 - TBD
+## 1.1.0 - 2021-02-25
 
-### Added
 
-- Nothing.
+-----
 
-### Changed
+### Release Notes for [1.1.0](https://github.com/laminas/laminas-cache-storage-adapter-blackhole/milestone/1)
 
-- Nothing.
 
-### Deprecated
 
-- Nothing.
+### 1.1.0
 
-### Removed
+- Total issues resolved: **0**
+- Total pull requests resolved: **1**
+- Total contributors: **1**
 
-- Nothing.
+#### Enhancement
 
-### Fixed
-
-- Nothing.
+ - [1: all datatypes for blackhole adapter](https://github.com/laminas/laminas-cache-storage-adapter-blackhole/pull/1) thanks to @JesBei
 
 ## 1.0.1 - 2020-10-12
 
