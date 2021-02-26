@@ -2,27 +2,24 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
-## 1.1.1 - TBD
+## 1.1.1 - 2021-02-26
 
-### Added
 
-- Nothing.
+-----
 
-### Changed
+### Release Notes for [1.1.1](https://github.com/laminas/laminas-cache-storage-adapter-blackhole/milestone/6)
 
-- Nothing.
+1.1.x bugfix release (patch)
 
-### Deprecated
+### 1.1.1
 
-- Nothing.
+- Total issues resolved: **0**
+- Total pull requests resolved: **1**
+- Total contributors: **1**
 
-### Removed
+#### Bug
 
-- Nothing.
-
-### Fixed
-
-- Nothing.
+ - [8: qa: remove invalid capability](https://github.com/laminas/laminas-cache-storage-adapter-blackhole/pull/8) thanks to @boesing
 
 ## 1.1.0 - 2021-02-25
 
