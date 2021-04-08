@@ -1,7 +1,6 @@
 # laminas-cache-storage-adapter-blackhole
 
-[![Build Status](https://travis-ci.com/laminas/laminas-cache-storage-adapter-blackhole.svg?branch=master)](https://travis-ci.com/laminas/laminas-cache-storage-adapter-blackhole)
-[![Coverage Status](https://coveralls.io/repos/github/laminas/laminas-cache-storage-adapter-blackhole/badge.svg?branch=master)](https://coveralls.io/github/laminas/laminas-cache-storage-adapter-blackhole?branch=master)
+[![Continuous Integration](https://github.com/laminas/laminas-cache-storage-adapter-blackhole/actions/workflows/continuous-integration.yml/badge.svg)](https://github.com/laminas/laminas-cache-storage-adapter-blackhole/actions/workflows/continuous-integration.yml)
 
 This library provides …
 
