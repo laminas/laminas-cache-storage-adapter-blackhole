@@ -20,6 +20,9 @@ use Laminas\Cache\Storage\StorageInterface;
 use Laminas\Cache\Storage\TaggableInterface;
 use Laminas\Cache\Storage\TotalSpaceCapableInterface;
 use stdClass;
+use Traversable;
+
+use function array_keys;
 
 class BlackHole implements
     StorageInterface,
@@ -38,7 +41,7 @@ class BlackHole implements
      *
      * @var null|Capabilities
      */
-    protected $capabilities = null;
+    protected $capabilities;
 
     /**
      * Marker to change capabilities
@@ -57,7 +60,7 @@ class BlackHole implements
     /**
      * Constructor
      *
-     * @param  null|array|\Traversable|AdapterOptions $options
+     * @param null|array|Traversable|AdapterOptions $options
      */
     public function __construct($options = null)
     {
@@ -69,7 +72,7 @@ class BlackHole implements
     /**
      * Set options.
      *
-     * @param array|\Traversable|AdapterOptions $options
+     * @param array|Traversable|AdapterOptions $options
      * @return BlackHole Provides a fluent interface
      */
     public function setOptions($options)
@@ -109,10 +112,11 @@ class BlackHole implements
      * @param  mixed   $casToken
      * @return mixed Data on success, null on failure
      */
-    public function getItem($key, & $success = null, & $casToken = null)
+    public function getItem($key, &$success = null, &$casToken = null)
     {
         $success = false;
-        return;
+
+        return null;
     }
 
     /**
@@ -367,8 +371,8 @@ class BlackHole implements
                     'object'   => true,
                     'resource' => true,
                 ],
-                'staticTtl' => $options->isPsrCompatible(),
-                'minTtl' => (int) $options->isPsrCompatible()
+                'staticTtl'          => $options->isPsrCompatible(),
+                'minTtl'             => (int) $options->isPsrCompatible(),
             ]);
         }
         return $this->capabilities;

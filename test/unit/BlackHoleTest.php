@@ -8,9 +8,20 @@
 
 namespace LaminasTest\Cache\Storage\Adapter;
 
+use Laminas\Cache\Storage\Adapter\AdapterOptions;
 use Laminas\Cache\Storage\Adapter\BlackHole;
 use Laminas\Cache\Storage\Adapter\BlackHoleOptions;
 use Laminas\Cache\Storage\AdapterPluginManager;
+use Laminas\Cache\Storage\AvailableSpaceCapableInterface;
+use Laminas\Cache\Storage\Capabilities;
+use Laminas\Cache\Storage\ClearByNamespaceInterface;
+use Laminas\Cache\Storage\ClearByPrefixInterface;
+use Laminas\Cache\Storage\ClearExpiredInterface;
+use Laminas\Cache\Storage\FlushableInterface;
+use Laminas\Cache\Storage\IterableInterface;
+use Laminas\Cache\Storage\OptimizableInterface;
+use Laminas\Cache\Storage\TaggableInterface;
+use Laminas\Cache\Storage\TotalSpaceCapableInterface;
 use Laminas\Cache\StorageFactory;
 use Laminas\ServiceManager\ServiceManager;
 use PHPUnit\Framework\TestCase;
@@ -20,9 +31,6 @@ use PHPUnit\Framework\TestCase;
  */
 
 /**
- * @category   Laminas
- * @package    Laminas_Cache
- * @subpackage UnitTests
  * @group      Laminas_Cache
  * @covers Laminas\Cache\Storage\Adapter\Blackhole<extended>
  */
@@ -35,7 +43,7 @@ class BlackHoleTest extends TestCase
      */
     protected $storage;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->storage = StorageFactory::adapterFactory('BlackHole');
     }
@@ -43,7 +51,7 @@ class BlackHoleTest extends TestCase
     /**
      * A data provider for common storage adapter names
      */
-    public function getCommonAdapterNamesProvider()
+    public function getCommonAdapterNamesProvider(): array
     {
         return [
             ['black_hole'],
@@ -56,9 +64,9 @@ class BlackHoleTest extends TestCase
     /**
      * @dataProvider getCommonAdapterNamesProvider
      */
-    public function testAdapterPluginManagerWithCommonNames($commonAdapterName)
+    public function testAdapterPluginManagerWithCommonNames(string $commonAdapterName)
     {
-        $pluginManager = new AdapterPluginManager(new ServiceManager);
+        $pluginManager = new AdapterPluginManager(new ServiceManager());
         $this->assertTrue(
             $pluginManager->has($commonAdapterName),
             "Storage adapter name '{$commonAdapterName}' not found in storage adapter plugin manager"
@@ -68,7 +76,7 @@ class BlackHoleTest extends TestCase
     public function testGetOptions()
     {
         $options = $this->storage->getOptions();
-        $this->assertInstanceOf('Laminas\Cache\Storage\Adapter\AdapterOptions', $options);
+        $this->assertInstanceOf(AdapterOptions::class, $options);
     }
 
     public function testSetOptions()
@@ -80,7 +88,7 @@ class BlackHoleTest extends TestCase
     public function testGetCapabilities()
     {
         $capabilities = $this->storage->getCapabilities();
-        $this->assertInstanceOf('Laminas\Cache\Storage\Capabilities', $capabilities);
+        $this->assertInstanceOf(Capabilities::class, $capabilities);
     }
 
     public function testSingleStorageOperatios()
@@ -114,37 +122,37 @@ class BlackHoleTest extends TestCase
 
     public function testAvailableSpaceCapableInterface()
     {
-        $this->assertInstanceOf('Laminas\Cache\Storage\AvailableSpaceCapableInterface', $this->storage);
+        $this->assertInstanceOf(AvailableSpaceCapableInterface::class, $this->storage);
         $this->assertSame(0, $this->storage->getAvailableSpace());
     }
 
     public function testClearByNamespaceInterface()
     {
-        $this->assertInstanceOf('Laminas\Cache\Storage\ClearByNamespaceInterface', $this->storage);
+        $this->assertInstanceOf(ClearByNamespaceInterface::class, $this->storage);
         $this->assertFalse($this->storage->clearByNamespace('test'));
     }
 
     public function testClearByPrefixInterface()
     {
-        $this->assertInstanceOf('Laminas\Cache\Storage\ClearByPrefixInterface', $this->storage);
+        $this->assertInstanceOf(ClearByPrefixInterface::class, $this->storage);
         $this->assertFalse($this->storage->clearByPrefix('test'));
     }
 
     public function testCleariExpiredInterface()
     {
-        $this->assertInstanceOf('Laminas\Cache\Storage\ClearExpiredInterface', $this->storage);
+        $this->assertInstanceOf(ClearExpiredInterface::class, $this->storage);
         $this->assertFalse($this->storage->clearExpired());
     }
 
     public function testFlushableInterface()
     {
-        $this->assertInstanceOf('Laminas\Cache\Storage\FlushableInterface', $this->storage);
+        $this->assertInstanceOf(FlushableInterface::class, $this->storage);
         $this->assertFalse($this->storage->flush());
     }
 
     public function testIterableInterface()
     {
-        $this->assertInstanceOf('Laminas\Cache\Storage\IterableInterface', $this->storage);
+        $this->assertInstanceOf(IterableInterface::class, $this->storage);
         $iterator = $this->storage->getIterator();
         foreach ($iterator as $item) {
             $this->fail('The iterator of the BlackHole adapter should be empty');
@@ -153,13 +161,13 @@ class BlackHoleTest extends TestCase
 
     public function testOptimizableInterface()
     {
-        $this->assertInstanceOf('Laminas\Cache\Storage\OptimizableInterface', $this->storage);
+        $this->assertInstanceOf(OptimizableInterface::class, $this->storage);
         $this->assertFalse($this->storage->optimize());
     }
 
     public function testTaggableInterface()
     {
-        $this->assertInstanceOf('Laminas\Cache\Storage\TaggableInterface', $this->storage);
+        $this->assertInstanceOf(TaggableInterface::class, $this->storage);
         $this->assertFalse($this->storage->setTags('test', ['tag1']));
         $this->assertFalse($this->storage->getTags('test'));
         $this->assertFalse($this->storage->clearByTags(['tag1']));
@@ -167,13 +175,13 @@ class BlackHoleTest extends TestCase
 
     public function testTotalSpaceCapableInterface()
     {
-        $this->assertInstanceOf('Laminas\Cache\Storage\TotalSpaceCapableInterface', $this->storage);
+        $this->assertInstanceOf(TotalSpaceCapableInterface::class, $this->storage);
         $this->assertSame(0, $this->storage->getTotalSpace());
     }
 
     public function testSupportedDataTypes()
     {
-        $capabilities = $this->storage->getCapabilities();
+        $capabilities       = $this->storage->getCapabilities();
         $supportedDataTypes = $capabilities->getSupportedDatatypes();
         $this->assertNotEmpty($supportedDataTypes);
         foreach ($supportedDataTypes as $supportedDataType) {
@@ -194,7 +202,7 @@ class BlackHoleTest extends TestCase
 
     public function testConstructorPassesBlackHoleOptions()
     {
-        $cache = new BlackHole(['psr' => true]);
+        $cache   = new BlackHole(['psr' => true]);
         $options = $cache->getOptions();
         $this->assertInstanceOf(BlackHoleOptions::class, $options);
         $this->assertTrue($options->isPsrCompatible());

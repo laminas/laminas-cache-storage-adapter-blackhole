@@ -14,13 +14,15 @@ final class BlackHoleOptions extends AdapterOptions
      * Flag to optionally allow PSR compatibility.
      * This flag is necessary due to the fact that providing proper PSR support without BC
      * breaks wont be possible otherwise.
+     *
      * @var bool
      */
     protected $psr = false;
 
     /**
-     * @return bool
      * @internal
+     *
+     * @return bool
      */
     public function isPsrCompatible()
     {
@@ -28,9 +30,10 @@ final class BlackHoleOptions extends AdapterOptions
     }
 
     /**
+     * @internal
+     *
      * @param bool $psr
      * @return void
-     * @internal
      */
     public function setPsr($psr)
     {
