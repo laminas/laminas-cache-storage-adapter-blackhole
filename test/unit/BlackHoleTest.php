@@ -211,4 +211,10 @@ class BlackHoleTest extends TestCase
         $cache = new BlackHole(['psr' => true]);
         $this->assertTrue($cache->clearByNamespace('foo'));
     }
+
+    public function testRemoveItemsReturnsEmptyListOfStringsWhenPsrCompatibilityIsEnabled()
+    {
+        $cache = new BlackHole(['psr' => true]);
+        $this->assertEquals([], $cache->removeItems([]));
+    }
 }
