@@ -300,6 +300,10 @@ class BlackHole implements
      */
     public function removeItems(array $keys)
     {
+        if ($this->getOptions()->isPsrCompatible()) {
+            return [];
+        }
+
         return $keys;
     }
 
