@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Laminas\Cache\Storage\Adapter;
 
+use Laminas\Cache\Exception\InvalidArgumentException;
 use Laminas\Cache\Storage\AvailableSpaceCapableInterface;
 use Laminas\Cache\Storage\Capabilities;
 use Laminas\Cache\Storage\ClearByNamespaceInterface;
@@ -16,7 +19,9 @@ use Laminas\Cache\Storage\TotalSpaceCapableInterface;
 use stdClass;
 use Traversable;
 
-use function array_keys;
+use function assert;
+
+use const PHP_INT_MAX;
 
 class BlackHole implements
     StorageInterface,
@@ -47,7 +52,7 @@ class BlackHole implements
     /**
      * options
      *
-     * @var null|BlackHoleOptions
+     * @var null|AdapterOptions
      */
     protected $options;
 
@@ -72,13 +77,13 @@ class BlackHole implements
     public function setOptions($options)
     {
         if ($this->options !== $options) {
-            if (! $options instanceof BlackHoleOptions) {
-                $options = new BlackHoleOptions($options);
+            if (! $options instanceof AdapterOptions) {
+                $options = new AdapterOptions($options);
             }
-
             if ($this->options) {
                 $this->options->setAdapter(null);
             }
+
             $options->setAdapter($this);
             $this->options = $options;
         }
@@ -88,13 +93,15 @@ class BlackHole implements
     /**
      * Get options
      *
-     * @return BlackHoleOptions
+     * @return AdapterOptions
      */
     public function getOptions()
     {
         if (! $this->options) {
-            $this->setOptions(new BlackHoleOptions());
+            $this->setOptions(new AdapterOptions());
+            assert($this->options instanceof AdapterOptions);
         }
+
         return $this->options;
     }
 
@@ -177,7 +184,7 @@ class BlackHole implements
      */
     public function setItem($key, $value)
     {
-        return false;
+        return $this->getOptions()->getWritable();
     }
 
     /**
@@ -188,7 +195,11 @@ class BlackHole implements
      */
     public function setItems(array $keyValuePairs)
     {
-        return array_keys($keyValuePairs);
+        if ($this->getOptions()->getWritable()) {
+            return [];
+        }
+
+        return $keyValuePairs;
     }
 
     /**
@@ -200,7 +211,7 @@ class BlackHole implements
      */
     public function addItem($key, $value)
     {
-        return false;
+        return $this->getOptions()->getWritable();
     }
 
     /**
@@ -211,7 +222,11 @@ class BlackHole implements
      */
     public function addItems(array $keyValuePairs)
     {
-        return array_keys($keyValuePairs);
+        if (! $this->getOptions()->getWritable()) {
+            return $keyValuePairs;
+        }
+
+        return [];
     }
 
     /**
@@ -223,7 +238,7 @@ class BlackHole implements
      */
     public function replaceItem($key, $value)
     {
-        return false;
+        return $this->getOptions()->getWritable();
     }
 
     /**
@@ -234,7 +249,11 @@ class BlackHole implements
      */
     public function replaceItems(array $keyValuePairs)
     {
-        return array_keys($keyValuePairs);
+        if (! $this->getOptions()->getWritable()) {
+            return $keyValuePairs;
+        }
+
+        return [];
     }
 
     /**
@@ -250,7 +269,7 @@ class BlackHole implements
      */
     public function checkAndSetItem($token, $key, $value)
     {
-        return false;
+        return $this->getOptions()->getWritable();
     }
 
     /**
@@ -294,11 +313,7 @@ class BlackHole implements
      */
     public function removeItems(array $keys)
     {
-        if ($this->getOptions()->isPsrCompatible()) {
-            return [];
-        }
-
-        return $keys;
+        return [];
     }
 
     /**
@@ -355,7 +370,6 @@ class BlackHole implements
     public function getCapabilities()
     {
         if ($this->capabilities === null) {
-            $options = $this->getOptions();
             // use default capabilities only
             $this->capabilityMarker = new stdClass();
             $this->capabilities     = new Capabilities($this, $this->capabilityMarker, [
@@ -369,8 +383,11 @@ class BlackHole implements
                     'object'   => true,
                     'resource' => true,
                 ],
-                'staticTtl'          => $options->isPsrCompatible(),
-                'minTtl'             => (int) $options->isPsrCompatible(),
+                'staticTtl'          => true,
+                'minTtl'             => 1,
+                'maxKeyLength'       => 0,
+                'ttlPrecision'       => 1,
+                'useRequestTime'     => false,
             ]);
         }
         return $this->capabilities;
@@ -381,11 +398,11 @@ class BlackHole implements
     /**
      * Get available space in bytes
      *
-     * @return int|float
+     * @return int
      */
     public function getAvailableSpace()
     {
-        return 0;
+        return PHP_INT_MAX;
     }
 
     /* ClearByNamespaceInterface */
@@ -398,11 +415,10 @@ class BlackHole implements
      */
     public function clearByNamespace($namespace)
     {
-        if ($this->getOptions()->isPsrCompatible()) {
-            return true;
+        if ($namespace === '') {
+            throw new InvalidArgumentException('Namespace must not be empty.');
         }
-
-        return false;
+        return true;
     }
 
     /* ClearByPrefixInterface */
@@ -415,7 +431,11 @@ class BlackHole implements
      */
     public function clearByPrefix($prefix)
     {
-        return false;
+        if ($prefix === '') {
+            throw new InvalidArgumentException('Prefix must not be empty.');
+        }
+
+        return true;
     }
 
     /* ClearExpiredInterface */
@@ -427,7 +447,7 @@ class BlackHole implements
      */
     public function clearExpired()
     {
-        return false;
+        return true;
     }
 
     /* FlushableInterface */
@@ -439,11 +459,7 @@ class BlackHole implements
      */
     public function flush()
     {
-        if ($this->getOptions()->isPsrCompatible()) {
-            return true;
-        }
-
-        return false;
+        return true;
     }
 
     /* IterableInterface */
@@ -467,7 +483,7 @@ class BlackHole implements
      */
     public function optimize()
     {
-        return false;
+        return true;
     }
 
     /* TaggableInterface */
@@ -482,7 +498,7 @@ class BlackHole implements
      */
     public function setTags($key, array $tags)
     {
-        return false;
+        return true;
     }
 
     /**
@@ -508,7 +524,7 @@ class BlackHole implements
      */
     public function clearByTags(array $tags, $disjunction = false)
     {
-        return false;
+        return true;
     }
 
     /* TotalSpaceCapableInterface */
@@ -520,6 +536,6 @@ class BlackHole implements
      */
     public function getTotalSpace()
     {
-        return 0;
+        return PHP_INT_MAX;
     }
 }

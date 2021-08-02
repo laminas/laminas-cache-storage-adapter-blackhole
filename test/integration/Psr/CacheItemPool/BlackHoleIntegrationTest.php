@@ -1,16 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LaminasTest\Cache\Storage\Adapter\Psr\CacheItemPool;
 
-use Cache\IntegrationTests\CachePoolTest;
-use Laminas\Cache\Psr\CacheItemPool\CacheItemPoolDecorator;
 use Laminas\Cache\Storage\Adapter\BlackHole;
+use Laminas\Cache\Storage\StorageInterface;
+use LaminasTest\Cache\Storage\Adapter\AbstractCacheItemPoolIntegrationTest;
 
-final class BlackHoleIntegrationTest extends CachePoolTest
+final class BlackHoleIntegrationTest extends AbstractCacheItemPoolIntegrationTest
 {
     private const TEST_NOT_SUPPORTED_REASON = 'BlackHole never caches.';
 
-    /** @var string[] */
+    /** @var array<string,string> */
     protected $skippedTests = [
         'testBasicUsage'                                   => self::TEST_NOT_SUPPORTED_REASON,
         'testGetItem'                                      => self::TEST_NOT_SUPPORTED_REASON,
@@ -43,8 +45,8 @@ final class BlackHoleIntegrationTest extends CachePoolTest
         'testBasicUsageWithLongKey'                        => self::TEST_NOT_SUPPORTED_REASON,
     ];
 
-    public function createCachePool(): CacheItemPoolDecorator
+    protected function createStorage(): StorageInterface
     {
-        return new CacheItemPoolDecorator(new BlackHole(['psr' => true]));
+        return new BlackHole();
     }
 }
