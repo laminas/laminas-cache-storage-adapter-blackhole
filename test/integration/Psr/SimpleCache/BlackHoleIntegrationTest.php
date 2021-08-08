@@ -1,16 +1,19 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LaminasTest\Cache\Storage\Adapter\Psr\SimpleCache;
 
-use Cache\IntegrationTests\SimpleCacheTest;
 use Laminas\Cache\Psr\SimpleCache\SimpleCacheDecorator;
 use Laminas\Cache\Storage\Adapter\BlackHole;
+use Laminas\Cache\Storage\StorageInterface;
+use LaminasTest\Cache\Storage\Adapter\AbstractSimpleCacheIntegrationTest;
 
-final class BlackHoleIntegrationTest extends SimpleCacheTest
+final class BlackHoleIntegrationTest extends AbstractSimpleCacheIntegrationTest
 {
     private const TEST_NOT_SUPPORTED_REASON = 'BlackHole never caches.';
 
-    /** @var string[] */
+    /** @var array<string,string> */
     protected $skippedTests = [
         'testSet'                            => self::TEST_NOT_SUPPORTED_REASON,
         'testSetMultipleValidData'           => self::TEST_NOT_SUPPORTED_REASON,
@@ -37,17 +40,14 @@ final class BlackHoleIntegrationTest extends SimpleCacheTest
         'testSetMultipleWithIntegerArrayKey' => self::TEST_NOT_SUPPORTED_REASON,
     ];
 
-    public function createSimpleCache(): SimpleCacheDecorator
+    protected function createStorage(): StorageInterface
     {
-        return new SimpleCacheDecorator(new BlackHole([
-            'psr' => true,
-        ]));
+        return new BlackHole();
     }
 
-    public function testCanClearWithoutNamespace()
+    public function testCanClearWithoutNamespace(): void
     {
         $cache = new SimpleCacheDecorator(new BlackHole([
-            'psr'       => true,
             'namespace' => '',
         ]));
 

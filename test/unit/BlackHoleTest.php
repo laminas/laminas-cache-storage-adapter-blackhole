@@ -1,222 +1,221 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LaminasTest\Cache\Storage\Adapter;
 
 use Laminas\Cache\Storage\Adapter\AdapterOptions;
 use Laminas\Cache\Storage\Adapter\BlackHole;
-use Laminas\Cache\Storage\Adapter\BlackHoleOptions;
-use Laminas\Cache\Storage\AdapterPluginManager;
-use Laminas\Cache\Storage\AvailableSpaceCapableInterface;
-use Laminas\Cache\Storage\Capabilities;
-use Laminas\Cache\Storage\ClearByNamespaceInterface;
-use Laminas\Cache\Storage\ClearByPrefixInterface;
-use Laminas\Cache\Storage\ClearExpiredInterface;
-use Laminas\Cache\Storage\FlushableInterface;
-use Laminas\Cache\Storage\IterableInterface;
-use Laminas\Cache\Storage\OptimizableInterface;
-use Laminas\Cache\Storage\TaggableInterface;
-use Laminas\Cache\Storage\TotalSpaceCapableInterface;
-use Laminas\Cache\StorageFactory;
-use Laminas\ServiceManager\ServiceManager;
-use PHPUnit\Framework\TestCase;
 
-/**
- * PHPUnit test case
- */
-
-/**
- * @group      Laminas_Cache
- * @covers Laminas\Cache\Storage\Adapter\Blackhole<extended>
- */
-class BlackHoleTest extends TestCase
+class BlackHoleTest extends AbstractCommonAdapterTest
 {
-    /**
-     * The storage adapter
-     *
-     * @var StorageInterface
-     */
-    protected $storage;
+    private const MESSAGE_UNSUPPORTED = 'Functionality is not supported by this adapter.';
 
     public function setUp(): void
     {
-        $this->storage = StorageFactory::adapterFactory('BlackHole');
+        $this->storage = new BlackHole();
+        $this->options = new AdapterOptions();
+        $this->storage->setOptions($this->options);
+        parent::setUp();
     }
 
-    /**
-     * A data provider for common storage adapter names
-     */
-    public function getCommonAdapterNamesProvider(): array
+    public function testTaggableFunctionsOnEmptyStorage(): void
     {
-        return [
-            ['black_hole'],
-            ['blackhole'],
-            ['blackHole'],
-            ['BlackHole'],
-        ];
+        self::markTestSkipped(self::MESSAGE_UNSUPPORTED);
     }
 
-    /**
-     * @dataProvider getCommonAdapterNamesProvider
-     */
-    public function testAdapterPluginManagerWithCommonNames(string $commonAdapterName)
+    public function testTaggable(): void
     {
-        $pluginManager = new AdapterPluginManager(new ServiceManager());
-        $this->assertTrue(
-            $pluginManager->has($commonAdapterName),
-            "Storage adapter name '{$commonAdapterName}' not found in storage adapter plugin manager"
-        );
+        self::markTestSkipped(self::MESSAGE_UNSUPPORTED);
     }
 
-    public function testGetOptions()
+    public function testClearExpired(): void
     {
-        $options = $this->storage->getOptions();
-        $this->assertInstanceOf(AdapterOptions::class, $options);
+        self::markTestSkipped(self::MESSAGE_UNSUPPORTED);
     }
 
-    public function testSetOptions()
+    public function testClearByNamespace(): void
     {
-        $this->storage->setOptions(['namespace' => 'test']);
-        $this->assertSame('test', $this->storage->getOptions()->getNamespace());
+        self::markTestSkipped(self::MESSAGE_UNSUPPORTED);
     }
 
-    public function testGetCapabilities()
+    public function testClearByPrefix(): void
     {
-        $capabilities = $this->storage->getCapabilities();
-        $this->assertInstanceOf(Capabilities::class, $capabilities);
+        self::markTestSkipped(self::MESSAGE_UNSUPPORTED);
     }
 
-    public function testSingleStorageOperatios()
+    public function testIterator(): void
     {
-        $this->assertFalse($this->storage->setItem('test', 1));
-        $this->assertFalse($this->storage->addItem('test', 1));
-        $this->assertFalse($this->storage->replaceItem('test', 1));
-        $this->assertFalse($this->storage->touchItem('test'));
-        $this->assertFalse($this->storage->incrementItem('test', 1));
-        $this->assertFalse($this->storage->decrementItem('test', 1));
-        $this->assertFalse($this->storage->hasItem('test'));
-        $this->assertNull($this->storage->getItem('test', $success));
-        $this->assertFalse($success);
-        $this->assertFalse($this->storage->getMetadata('test'));
-        $this->assertFalse($this->storage->removeItem('test'));
+        self::markTestSkipped(self::MESSAGE_UNSUPPORTED);
     }
 
-    public function testMultiStorageOperatios()
+    public function testTouchItem(): void
     {
-        $this->assertSame(['test'], $this->storage->setItems(['test' => 1]));
-        $this->assertSame(['test'], $this->storage->addItems(['test' => 1]));
-        $this->assertSame(['test'], $this->storage->replaceItems(['test' => 1]));
-        $this->assertSame(['test'], $this->storage->touchItems(['test']));
-        $this->assertSame([], $this->storage->incrementItems(['test' => 1]));
-        $this->assertSame([], $this->storage->decrementItems(['test' => 1]));
-        $this->assertSame([], $this->storage->hasItems(['test']));
-        $this->assertSame([], $this->storage->getItems(['test']));
-        $this->assertSame([], $this->storage->getMetadatas(['test']));
-        $this->assertSame(['test'], $this->storage->removeItems(['test']));
+        self::markTestSkipped(self::MESSAGE_UNSUPPORTED);
     }
 
-    public function testAvailableSpaceCapableInterface()
+    public function testDecrementItemsReturnsEmptyArrayIfNonWritable(): void
     {
-        $this->assertInstanceOf(AvailableSpaceCapableInterface::class, $this->storage);
-        $this->assertSame(0, $this->storage->getAvailableSpace());
+        self::markTestSkipped(self::MESSAGE_UNSUPPORTED);
     }
 
-    public function testClearByNamespaceInterface()
+    public function testSetAndDecrementItems(): void
     {
-        $this->assertInstanceOf(ClearByNamespaceInterface::class, $this->storage);
-        $this->assertFalse($this->storage->clearByNamespace('test'));
+        self::markTestSkipped(self::MESSAGE_UNSUPPORTED);
     }
 
-    public function testClearByPrefixInterface()
+    public function testDecrementItemReturnsFalseIfNonWritable(): void
     {
-        $this->assertInstanceOf(ClearByPrefixInterface::class, $this->storage);
-        $this->assertFalse($this->storage->clearByPrefix('test'));
+        self::markTestSkipped(self::MESSAGE_UNSUPPORTED);
     }
 
-    public function testCleariExpiredInterface()
+    public function testDecrementItemInitialValue(): void
     {
-        $this->assertInstanceOf(ClearExpiredInterface::class, $this->storage);
-        $this->assertFalse($this->storage->clearExpired());
+        self::markTestSkipped(self::MESSAGE_UNSUPPORTED);
     }
 
-    public function testFlushableInterface()
+    public function testDecrementItem(): void
     {
-        $this->assertInstanceOf(FlushableInterface::class, $this->storage);
-        $this->assertFalse($this->storage->flush());
+        self::markTestSkipped(self::MESSAGE_UNSUPPORTED);
     }
 
-    public function testIterableInterface()
+    public function testIncrementItemsReturnsEmptyArrayIfNonWritable(): void
     {
-        $this->assertInstanceOf(IterableInterface::class, $this->storage);
-        $iterator = $this->storage->getIterator();
-        foreach ($iterator as $item) {
-            $this->fail('The iterator of the BlackHole adapter should be empty');
-        }
+        self::markTestSkipped(self::MESSAGE_UNSUPPORTED);
     }
 
-    public function testOptimizableInterface()
+    public function testIncrementItemsReturnsKeyValuePairsOfWrittenItems(): void
     {
-        $this->assertInstanceOf(OptimizableInterface::class, $this->storage);
-        $this->assertFalse($this->storage->optimize());
+        self::markTestSkipped(self::MESSAGE_UNSUPPORTED);
     }
 
-    public function testTaggableInterface()
+    public function testSetAndIncrementItems(): void
     {
-        $this->assertInstanceOf(TaggableInterface::class, $this->storage);
-        $this->assertFalse($this->storage->setTags('test', ['tag1']));
-        $this->assertFalse($this->storage->getTags('test'));
-        $this->assertFalse($this->storage->clearByTags(['tag1']));
+        self::markTestSkipped(self::MESSAGE_UNSUPPORTED);
     }
 
-    public function testTotalSpaceCapableInterface()
+    public function testIncrementItemReturnsFalseIfNonWritable(): void
     {
-        $this->assertInstanceOf(TotalSpaceCapableInterface::class, $this->storage);
-        $this->assertSame(0, $this->storage->getTotalSpace());
+        self::markTestSkipped(self::MESSAGE_UNSUPPORTED);
     }
 
-    public function testSupportedDataTypes()
+    public function testIncrementItemInitialValue(): void
     {
-        $capabilities       = $this->storage->getCapabilities();
-        $supportedDataTypes = $capabilities->getSupportedDatatypes();
-        $this->assertNotEmpty($supportedDataTypes);
-        foreach ($supportedDataTypes as $supportedDataType) {
-            $this->assertTrue($supportedDataType);
-        }
+        self::markTestSkipped(self::MESSAGE_UNSUPPORTED);
     }
 
-    public function testSetOptionsCreatesBlackHoleOptions()
+    public function testIncrementItem(): void
     {
-        $this->storage->setOptions([]);
-        $this->assertInstanceOf(BlackHoleOptions::class, $this->storage->getOptions());
+        self::markTestSkipped(self::MESSAGE_UNSUPPORTED);
     }
 
-    public function testGetOptionsReturnsBlackHoleOptions()
+    public function testCheckAndSetItem(): void
     {
-        $this->assertInstanceOf(BlackHoleOptions::class, $this->storage->getOptions());
+        self::markTestSkipped(self::MESSAGE_UNSUPPORTED);
     }
 
-    public function testConstructorPassesBlackHoleOptions()
+    public function testRemoveItemsReturnsMissingKeys(): void
     {
-        $cache   = new BlackHole(['psr' => true]);
-        $options = $cache->getOptions();
-        $this->assertInstanceOf(BlackHoleOptions::class, $options);
-        $this->assertTrue($options->isPsrCompatible());
+        self::markTestSkipped(self::MESSAGE_UNSUPPORTED);
     }
 
-    public function testFlushReturnsTrueWhenPsrCompatibilityIsEnabled()
+    public function testReplaceItemsReturnsFailedKeys(): void
     {
-        $cache = new BlackHole(['psr' => true]);
-        $this->assertTrue($cache->flush());
+        self::markTestSkipped(self::MESSAGE_UNSUPPORTED);
     }
 
-    public function testClearByNamespaceReturnsTrueWhenPsrCompatibilityIsEnabled()
+    public function testReplaceItemReturnsFalseIfNonWritable(): void
     {
-        $cache = new BlackHole(['psr' => true]);
-        $this->assertTrue($cache->clearByNamespace('foo'));
+        self::markTestSkipped(self::MESSAGE_UNSUPPORTED);
     }
 
-    public function testRemoveItemsReturnsEmptyListOfStringsWhenPsrCompatibilityIsEnabled()
+    public function testReplaceItemReturnsFalseOnMissingItem(): void
     {
-        $cache = new BlackHole(['psr' => true]);
-        $this->assertEquals([], $cache->removeItems([]));
+        self::markTestSkipped(self::MESSAGE_UNSUPPORTED);
+    }
+
+    public function testReplaceExistingItem(): void
+    {
+        self::markTestSkipped(self::MESSAGE_UNSUPPORTED);
+    }
+
+    public function testAddItemsReturnsFailedKeys(): void
+    {
+        self::markTestSkipped(self::MESSAGE_UNSUPPORTED);
+    }
+
+    public function testAddItemReturnsFalseIfItemAlreadyExists(): void
+    {
+        self::markTestSkipped(self::MESSAGE_UNSUPPORTED);
+    }
+
+    public function testAddNewItem(): void
+    {
+        self::markTestSkipped(self::MESSAGE_UNSUPPORTED);
+    }
+
+    public function testSetAndGetItemOfDifferentTypes(): void
+    {
+        self::markTestSkipped(self::MESSAGE_UNSUPPORTED);
+    }
+
+    public function testSetAndGetExpiredItems(): void
+    {
+        self::markTestSkipped(self::MESSAGE_UNSUPPORTED);
+    }
+
+    public function testSetGetHasAndRemoveItemsWithNamespace(): void
+    {
+        self::markTestSkipped(self::MESSAGE_UNSUPPORTED);
+    }
+
+    public function testSetGetHasAndRemoveItemWithNamespace(): void
+    {
+        self::markTestSkipped(self::MESSAGE_UNSUPPORTED);
+    }
+
+    public function testSetGetHasAndRemoveItemsWithoutNamespace(): void
+    {
+        self::markTestSkipped(self::MESSAGE_UNSUPPORTED);
+    }
+
+    public function testSetGetHasAndRemoveItemWithoutNamespace(): void
+    {
+        self::markTestSkipped(self::MESSAGE_UNSUPPORTED);
+    }
+
+    public function testGetMetadatasWithEmptyNamespace(): void
+    {
+        self::markTestSkipped(self::MESSAGE_UNSUPPORTED);
+    }
+
+    public function testGetMetadatas(): void
+    {
+        self::markTestSkipped(self::MESSAGE_UNSUPPORTED);
+    }
+
+    public function testGetMetadata(): void
+    {
+        self::markTestSkipped(self::MESSAGE_UNSUPPORTED);
+    }
+
+    public function testGetItemsReturnsKeyValuePairsOfFoundItems(): void
+    {
+        self::markTestSkipped(self::MESSAGE_UNSUPPORTED);
+    }
+
+    public function testGetItemSetsSuccessFlag(): void
+    {
+        self::markTestSkipped(self::MESSAGE_UNSUPPORTED);
+    }
+
+    public function testHasItemsReturnsKeysOfFoundItems(): void
+    {
+        self::markTestSkipped(self::MESSAGE_UNSUPPORTED);
+    }
+
+    public function testHasItemReturnsTrueOnValidItem(): void
+    {
+        self::markTestSkipped(self::MESSAGE_UNSUPPORTED);
     }
 }
