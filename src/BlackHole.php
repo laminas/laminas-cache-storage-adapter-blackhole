@@ -23,7 +23,7 @@ use function assert;
 
 use const PHP_INT_MAX;
 
-class BlackHole implements
+final class BlackHole implements
     StorageInterface,
     AvailableSpaceCapableInterface,
     ClearByNamespaceInterface,
@@ -469,7 +469,7 @@ class BlackHole implements
      *
      * @return KeyListIterator
      */
-    public function getIterator()
+    public function getIterator(): Traversable
     {
         return new KeyListIterator($this, []);
     }
