@@ -385,7 +385,7 @@ final class BlackHole implements
                 ],
                 'staticTtl'          => true,
                 'minTtl'             => 1,
-                'maxKeyLength'       => 0,
+                'maxKeyLength'       => Capabilities::UNLIMITED_KEY_LENGTH,
                 'ttlPrecision'       => 1,
                 'useRequestTime'     => false,
             ]);
