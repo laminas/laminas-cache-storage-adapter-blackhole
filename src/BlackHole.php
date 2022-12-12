@@ -23,6 +23,11 @@ use function assert;
 
 use const PHP_INT_MAX;
 
+/**
+ * @template TKey
+ * @template TValue
+ * @implements IterableInterface<TKey, TValue>
+ */
 final class BlackHole implements
     StorageInterface,
     AvailableSpaceCapableInterface,
@@ -467,7 +472,7 @@ final class BlackHole implements
     /**
      * Get the storage iterator
      *
-     * @return KeyListIterator
+     * @return KeyListIterator<TValue>
      */
     public function getIterator(): Traversable
     {
