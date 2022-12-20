@@ -7,6 +7,7 @@ namespace LaminasTest\Cache\Storage\Adapter;
 use Laminas\Cache\Storage\Adapter\AdapterOptions;
 use Laminas\Cache\Storage\Adapter\BlackHole;
 
+/** @extends AbstractCommonAdapterTest<BlackHole, AdapterOptions> */
 class BlackHoleTest extends AbstractCommonAdapterTest
 {
     private const MESSAGE_UNSUPPORTED = 'Functionality is not supported by this adapter.';
