@@ -472,6 +472,7 @@ final class BlackHole implements
     /**
      * Get the storage iterator
      *
+     * @psalm-suppress ImplementedReturnTypeMismatch
      * @return KeyListIterator<TValue>
      */
     public function getIterator(): Traversable
