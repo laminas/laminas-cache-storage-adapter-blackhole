@@ -108,16 +108,16 @@
         },
         {
             "name": "laminas/laminas-eventmanager",
-            "version": "3.9.1",
+            "version": "3.9.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laminas/laminas-eventmanager.git",
-                "reference": "ee23858e56fca8b9c0051087b723840a4b0510b0"
+                "reference": "55f7c337f4e49baf6dca87220619d40d9518e6b6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laminas/laminas-eventmanager/zipball/ee23858e56fca8b9c0051087b723840a4b0510b0",
-                "reference": "ee23858e56fca8b9c0051087b723840a4b0510b0",
+                "url": "https://api.github.com/repos/laminas/laminas-eventmanager/zipball/55f7c337f4e49baf6dca87220619d40d9518e6b6",
+                "reference": "55f7c337f4e49baf6dca87220619d40d9518e6b6",
                 "shasum": ""
             },
             "require": {
@@ -172,7 +172,7 @@
                     "type": "community_bridge"
                 }
             ],
-            "time": "2022-12-20T12:47:44+00:00"
+            "time": "2022-12-20T19:45:38+00:00"
         },
         {
             "name": "laminas/laminas-servicemanager",
