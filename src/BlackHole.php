@@ -47,8 +47,6 @@ final class BlackHole implements
 
     /**
      * Marker to change capabilities
-     *
-     * @var null|object
      */
     private ?stdClass $capabilityMarker = null;
 
