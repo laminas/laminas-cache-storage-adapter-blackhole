@@ -52,8 +52,10 @@ final class BlackHole implements
 
     /**
      * options
+     * 
+     * @var null|AdapterOptions
      */
-    private null|array|Traversable|AdapterOptions $options = null;
+    private $options;
 
     /**
      * Constructor
