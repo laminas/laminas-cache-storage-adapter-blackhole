@@ -42,24 +42,20 @@ final class BlackHole implements
 {
     /**
      * Capabilities of this adapter
-     *
-     * @var null|Capabilities
      */
-    protected $capabilities;
+    private ?Capabilities $capabilities = null;
 
     /**
      * Marker to change capabilities
-     *
-     * @var null|object
      */
-    protected $capabilityMarker;
+    private ?object $capabilityMarker = null;
 
     /**
      * options
      *
      * @var null|AdapterOptions
      */
-    protected $options;
+    private $options;
 
     /**
      * Constructor
