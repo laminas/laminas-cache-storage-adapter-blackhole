@@ -52,7 +52,7 @@ final class BlackHole implements
 
     /**
      * options
-     * 
+     *
      * @var null|AdapterOptions
      */
     private $options;
