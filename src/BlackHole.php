@@ -48,14 +48,12 @@ final class BlackHole implements
     /**
      * Marker to change capabilities
      */
-    private ?stdClass $capabilityMarker = null;
+    private ?object $capabilityMarker = null;
 
     /**
      * options
-     *
-     * @var null|AdapterOptions
      */
-    private $options;
+    private null|array|Traversable|AdapterOptions $options = null;
 
     /**
      * Constructor
