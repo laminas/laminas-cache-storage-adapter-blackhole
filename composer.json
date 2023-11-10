@@ -20,7 +20,7 @@
     "laminas/laminas-cache-storage-adapter-test": "^2.4",
     "laminas/laminas-coding-standard": "~2.5.0",
     "psalm/plugin-phpunit": "^0.18.4",
-    "vimeo/psalm": "^5.15"
+    "vimeo/psalm": "5.2"
   },
   "config": {
     "sort-packages": true,
