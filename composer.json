@@ -20,7 +20,7 @@
     "laminas/laminas-cache-storage-adapter-test": "^2.4",
     "laminas/laminas-coding-standard": "~2.5.0",
     "psalm/plugin-phpunit": "^0.18.4",
-    "vimeo/psalm": "^5.2"
+    "vimeo/psalm": "^5.18"
   },
   "config": {
     "sort-packages": true,
@@ -53,6 +53,7 @@
   "scripts": {
     "cs-check": "phpcs",
     "cs-fix": "phpcbf",
+    "static-analysis": "psalm --shepherd --stats",
     "test": "phpunit --colors=always",
     "test-coverage": "phpunit --colors=always --coverage-clover clover.xml"
   },
