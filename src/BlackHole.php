@@ -60,7 +60,7 @@ final class BlackHole implements
     /**
      * Constructor
      *
-     * @param null|array|Traversable|AdapterOptions $options
+     * @param null|array<string, mixed>|Traversable<string, mixed>|AdapterOptions $options
      */
     public function __construct($options = null)
     {
@@ -72,7 +72,7 @@ final class BlackHole implements
     /**
      * Set options.
      *
-     * @param array|Traversable|AdapterOptions $options
+     * @param array<string, mixed>|Traversable<string, mixed>|AdapterOptions $options
      * @return BlackHole Provides a fluent interface
      */
     public function setOptions($options)

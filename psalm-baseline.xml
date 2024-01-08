@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<files psalm-version="5.18.0@b113f3ed0259fd6e212d87c3df80eec95a6abf19">
+  <file src="src/BlackHole.php">
+    <MoreSpecificImplementedParamType>
+      <code>$options</code>
+    </MoreSpecificImplementedParamType>
+  </file>
+  <file src="src/BlackHole/AdapterPluginManagerDelegatorFactory.php">
+    <UnusedParam>
+      <code>$container</code>
+      <code>$name</code>
+    </UnusedParam>
+  </file>
+</files>
