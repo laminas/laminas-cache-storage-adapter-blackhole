@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Laminas\Cache\Storage\Adapter;
 
+use Laminas\Cache\Storage\AbstractMetadataCapableAdapter;
 use Laminas\Cache\Storage\AvailableSpaceCapableInterface;
 use Laminas\Cache\Storage\Capabilities;
 use Laminas\Cache\Storage\ClearByNamespaceInterface;
@@ -21,9 +22,9 @@ use const PHP_INT_MAX;
  * @template TKey
  * @template TValue
  * @implements IterableInterface<TKey, TValue>
- * @template-extends AbstractAdapter<AdapterOptions>
+ * @template-extends AbstractMetadataCapableAdapter<AdapterOptions,object>
  */
-final class BlackHole extends AbstractAdapter implements
+final class BlackHole extends AbstractMetadataCapableAdapter implements
     AvailableSpaceCapableInterface,
     ClearByNamespaceInterface,
     ClearByPrefixInterface,
@@ -57,6 +58,11 @@ final class BlackHole extends AbstractAdapter implements
     protected function internalRemoveItem(string $normalizedKey): bool
     {
         return false;
+    }
+
+    protected function internalGetMetadata(string $normalizedKey): ?object
+    {
+        return null;
     }
 
     /**
