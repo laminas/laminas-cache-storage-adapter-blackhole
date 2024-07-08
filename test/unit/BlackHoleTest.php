@@ -44,4 +44,13 @@ final class BlackHoleTest extends TestCase
         self::assertSame([], $this->storage->addItems(['foo' => 'bar', 'bar' => 'baz']));
         self::assertSame([], $this->storage->hasItems(['foo', 'bar']));
     }
+
+    public function testPersistenceIsWritableOptionAware(): void
+    {
+        $adapter = new BlackHole(['writable' => false]);
+        self::assertFalse($adapter->setItem('foo', 'bar'));
+        self::assertSame(['foo', 'bar'], $adapter->setItems(['foo' => 'bar', 'bar' => 'baz']));
+        self::assertFalse($adapter->addItem('foo', 'bar'));
+        self::assertSame(['foo', 'bar'], $adapter->addItems(['foo' => 'bar', 'bar' => 'baz']));
+    }
 }

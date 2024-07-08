@@ -42,7 +42,7 @@ final class BlackHole extends AbstractAdapter implements
 
     protected function internalSetItem(string $normalizedKey, mixed $value): bool
     {
-        return true;
+        return $this->getOptions()->getWritable();
     }
 
     protected function internalRemoveItem(string $normalizedKey): bool
