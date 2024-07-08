@@ -34,17 +34,26 @@ final class BlackHole extends AbstractAdapter implements
     TaggableInterface,
     TotalSpaceCapableInterface
 {
+    /**
+     * {@inheritDoc}
+     */
     protected function internalGetItem(string $normalizedKey, ?bool &$success = null, mixed &$casToken = null): mixed
     {
         $success = false;
         return null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     protected function internalSetItem(string $normalizedKey, mixed $value): bool
     {
         return $this->getOptions()->getWritable();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     protected function internalRemoveItem(string $normalizedKey): bool
     {
         return false;
