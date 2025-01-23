@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Laminas\Cache\Storage\Adapter;
 
-use Laminas\Cache\Exception\InvalidArgumentException;
+use Laminas\Cache\Storage\AbstractMetadataCapableAdapter;
 use Laminas\Cache\Storage\AvailableSpaceCapableInterface;
 use Laminas\Cache\Storage\Capabilities;
 use Laminas\Cache\Storage\ClearByNamespaceInterface;
@@ -13,13 +13,8 @@ use Laminas\Cache\Storage\ClearExpiredInterface;
 use Laminas\Cache\Storage\FlushableInterface;
 use Laminas\Cache\Storage\IterableInterface;
 use Laminas\Cache\Storage\OptimizableInterface;
-use Laminas\Cache\Storage\StorageInterface;
 use Laminas\Cache\Storage\TaggableInterface;
 use Laminas\Cache\Storage\TotalSpaceCapableInterface;
-use stdClass;
-use Traversable;
-
-use function assert;
 
 use const PHP_INT_MAX;
 
@@ -27,9 +22,9 @@ use const PHP_INT_MAX;
  * @template TKey
  * @template TValue
  * @implements IterableInterface<TKey, TValue>
+ * @template-extends AbstractMetadataCapableAdapter<AdapterOptions,object>
  */
-final class BlackHole implements
-    StorageInterface,
+final class BlackHole extends AbstractMetadataCapableAdapter implements
     AvailableSpaceCapableInterface,
     ClearByNamespaceInterface,
     ClearByPrefixInterface,
@@ -41,502 +36,140 @@ final class BlackHole implements
     TotalSpaceCapableInterface
 {
     /**
-     * Capabilities of this adapter
+     * {@inheritDoc}
      */
-    private ?Capabilities $capabilities = null;
-
-    /**
-     * Marker to change capabilities
-     */
-    private ?object $capabilityMarker = null;
-
-    /**
-     * options
-     *
-     * @var null|AdapterOptions
-     */
-    private $options;
-
-    /**
-     * Constructor
-     *
-     * @param null|array<string, mixed>|Traversable<string, mixed>|AdapterOptions $options
-     */
-    public function __construct($options = null)
-    {
-        if ($options) {
-            $this->setOptions($options);
-        }
-    }
-
-    /**
-     * Set options.
-     *
-     * @param array<string, mixed>|Traversable<string, mixed>|AdapterOptions $options
-     * @return BlackHole Provides a fluent interface
-     */
-    public function setOptions($options)
-    {
-        if ($this->options !== $options) {
-            if (! $options instanceof AdapterOptions) {
-                $options = new AdapterOptions($options);
-            }
-            if ($this->options) {
-                $this->options->setAdapter(null);
-            }
-
-            $options->setAdapter($this);
-            $this->options = $options;
-        }
-        return $this;
-    }
-
-    /**
-     * Get options
-     *
-     * @return AdapterOptions
-     */
-    public function getOptions()
-    {
-        if (! $this->options) {
-            $this->setOptions(new AdapterOptions());
-            assert($this->options instanceof AdapterOptions);
-        }
-
-        return $this->options;
-    }
-
-    /**
-     * Get an item.
-     *
-     * @param  string  $key
-     * @param  bool $success
-     * @param  mixed   $casToken
-     * @return mixed Data on success, null on failure
-     */
-    public function getItem($key, &$success = null, &$casToken = null)
+    protected function internalGetItem(string $normalizedKey, ?bool &$success = null, mixed &$casToken = null): mixed
     {
         $success = false;
-
         return null;
     }
 
     /**
-     * Get multiple items.
-     *
-     * @param  array $keys
-     * @return array Associative array of keys and values
+     * {@inheritDoc}
      */
-    public function getItems(array $keys)
-    {
-        return [];
-    }
-
-    /**
-     * Test if an item exists.
-     *
-     * @param  string $key
-     * @return bool
-     */
-    public function hasItem($key)
-    {
-        return false;
-    }
-
-    /**
-     * Test multiple items.
-     *
-     * @param  array $keys
-     * @return array Array of found keys
-     */
-    public function hasItems(array $keys)
-    {
-        return [];
-    }
-
-    /**
-     * Get metadata of an item.
-     *
-     * @param  string $key
-     * @return array|bool Metadata on success, false on failure
-     */
-    public function getMetadata($key)
-    {
-        return false;
-    }
-
-    /**
-     * Get multiple metadata
-     *
-     * @param  array $keys
-     * @return array Associative array of keys and metadata
-     */
-    public function getMetadatas(array $keys)
-    {
-        return [];
-    }
-
-    /**
-     * Store an item.
-     *
-     * @param  string $key
-     * @param  mixed  $value
-     * @return bool
-     */
-    public function setItem($key, $value)
+    protected function internalSetItem(string $normalizedKey, mixed $value): bool
     {
         return $this->getOptions()->getWritable();
     }
 
     /**
-     * Store multiple items.
-     *
-     * @param  array $keyValuePairs
-     * @return array Array of not stored keys
+     * {@inheritDoc}
      */
-    public function setItems(array $keyValuePairs)
-    {
-        if ($this->getOptions()->getWritable()) {
-            return [];
-        }
-
-        return $keyValuePairs;
-    }
-
-    /**
-     * Add an item.
-     *
-     * @param  string $key
-     * @param  mixed  $value
-     * @return bool
-     */
-    public function addItem($key, $value)
-    {
-        return $this->getOptions()->getWritable();
-    }
-
-    /**
-     * Add multiple items.
-     *
-     * @param  array $keyValuePairs
-     * @return array Array of not stored keys
-     */
-    public function addItems(array $keyValuePairs)
-    {
-        if (! $this->getOptions()->getWritable()) {
-            return $keyValuePairs;
-        }
-
-        return [];
-    }
-
-    /**
-     * Replace an existing item.
-     *
-     * @param  string $key
-     * @param  mixed  $value
-     * @return bool
-     */
-    public function replaceItem($key, $value)
-    {
-        return $this->getOptions()->getWritable();
-    }
-
-    /**
-     * Replace multiple existing items.
-     *
-     * @param  array $keyValuePairs
-     * @return array Array of not stored keys
-     */
-    public function replaceItems(array $keyValuePairs)
-    {
-        if (! $this->getOptions()->getWritable()) {
-            return $keyValuePairs;
-        }
-
-        return [];
-    }
-
-    /**
-     * Set an item only if token matches
-     *
-     * It uses the token received from getItem() to check if the item has
-     * changed before overwriting it.
-     *
-     * @param  mixed  $token
-     * @param  string $key
-     * @param  mixed  $value
-     * @return bool
-     */
-    public function checkAndSetItem($token, $key, $value)
-    {
-        return $this->getOptions()->getWritable();
-    }
-
-    /**
-     * Reset lifetime of an item
-     *
-     * @param  string $key
-     * @return bool
-     */
-    public function touchItem($key)
+    protected function internalRemoveItem(string $normalizedKey): bool
     {
         return false;
     }
 
-    /**
-     * Reset lifetime of multiple items.
-     *
-     * @param  array $keys
-     * @return array Array of not updated keys
-     */
-    public function touchItems(array $keys)
+    protected function internalGetMetadata(string $normalizedKey): ?object
     {
-        return $keys;
+        return null;
     }
 
     /**
-     * Remove an item.
-     *
-     * @param  string $key
-     * @return bool
+     * {@inheritDoc}
      */
-    public function removeItem($key)
+    public function getCapabilities(): Capabilities
     {
-        return false;
+        return $this->capabilities ??= new Capabilities(
+            Capabilities::UNLIMITED_KEY_LENGTH,
+            true,
+            false,
+            [
+                'NULL'     => true,
+                'boolean'  => true,
+                'integer'  => true,
+                'double'   => true,
+                'string'   => true,
+                'array'    => true,
+                'object'   => true,
+                'resource' => true,
+            ],
+            1,
+            false,
+        );
     }
 
-    /**
-     * Remove multiple items.
-     *
-     * @param  array $keys
-     * @return array Array of not removed keys
-     */
-    public function removeItems(array $keys)
-    {
-        return [];
-    }
-
-    /**
-     * Increment an item.
-     *
-     * @param  string $key
-     * @param  int    $value
-     * @return int|bool The new value on success, false on failure
-     */
-    public function incrementItem($key, $value)
-    {
-        return false;
-    }
-
-    /**
-     * Increment multiple items.
-     *
-     * @param  array $keyValuePairs
-     * @return array Associative array of keys and new values
-     */
-    public function incrementItems(array $keyValuePairs)
-    {
-        return [];
-    }
-
-    /**
-     * Decrement an item.
-     *
-     * @param  string $key
-     * @param  int    $value
-     * @return int|bool The new value on success, false on failure
-     */
-    public function decrementItem($key, $value)
-    {
-        return false;
-    }
-
-    /**
-     * Decrement multiple items.
-     *
-     * @param  array $keyValuePairs
-     * @return array Associative array of keys and new values
-     */
-    public function decrementItems(array $keyValuePairs)
-    {
-        return [];
-    }
-
-    /**
-     * Capabilities of this storage
-     *
-     * @return Capabilities
-     */
-    public function getCapabilities()
-    {
-        if ($this->capabilities === null) {
-            // use default capabilities only
-            $this->capabilityMarker = new stdClass();
-            $this->capabilities     = new Capabilities($this, $this->capabilityMarker, [
-                'supportedDatatypes' => [
-                    'NULL'     => true,
-                    'boolean'  => true,
-                    'integer'  => true,
-                    'double'   => true,
-                    'string'   => true,
-                    'array'    => true,
-                    'object'   => true,
-                    'resource' => true,
-                ],
-                'staticTtl'          => true,
-                'minTtl'             => 1,
-                'maxKeyLength'       => Capabilities::UNLIMITED_KEY_LENGTH,
-                'ttlPrecision'       => 1,
-                'useRequestTime'     => false,
-            ]);
-        }
-        return $this->capabilities;
-    }
-
-    /* AvailableSpaceCapableInterface */
-
-    /**
-     * Get available space in bytes
-     *
-     * @return int
-     */
-    public function getAvailableSpace()
+    public function getAvailableSpace(): int
     {
         return PHP_INT_MAX;
     }
 
-    /* ClearByNamespaceInterface */
-
     /**
-     * Remove items of given namespace
-     *
-     * @param string $namespace
-     * @return bool
+     * {@inheritDoc}
      */
-    public function clearByNamespace($namespace)
-    {
-        if ($namespace === '') {
-            throw new InvalidArgumentException('Namespace must not be empty.');
-        }
-        return true;
-    }
-
-    /* ClearByPrefixInterface */
-
-    /**
-     * Remove items matching given prefix
-     *
-     * @param string $prefix
-     * @return bool
-     */
-    public function clearByPrefix($prefix)
-    {
-        if ($prefix === '') {
-            throw new InvalidArgumentException('Prefix must not be empty.');
-        }
-
-        return true;
-    }
-
-    /* ClearExpiredInterface */
-
-    /**
-     * Remove expired items
-     *
-     * @return bool
-     */
-    public function clearExpired()
+    public function clearByNamespace(string $namespace): bool
     {
         return true;
     }
 
-    /* FlushableInterface */
-
     /**
-     * Flush the whole storage
-     *
-     * @return bool
+     * {@inheritDoc}
      */
-    public function flush()
+    public function clearByPrefix(string $prefix): bool
     {
         return true;
     }
 
-    /* IterableInterface */
+    /**
+     * {@inheritDoc}
+     */
+    public function clearExpired(): bool
+    {
+        return true;
+    }
 
     /**
-     * Get the storage iterator
-     *
-     * @psalm-suppress ImplementedReturnTypeMismatch
-     * @return KeyListIterator<TValue>
+     * {@inheritDoc}
      */
-    public function getIterator(): Traversable
+    public function flush(): bool
+    {
+        return true;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getIterator(): KeyListIterator
     {
         return new KeyListIterator($this, []);
     }
 
-    /* OptimizableInterface */
-
     /**
-     * Optimize the storage
-     *
-     * @return bool
+     * {@inheritDoc}
      */
-    public function optimize()
-    {
-        return true;
-    }
-
-    /* TaggableInterface */
-
-    /**
-     * Set tags to an item by given key.
-     * An empty array will remove all tags.
-     *
-     * @param string   $key
-     * @param string[] $tags
-     * @return bool
-     */
-    public function setTags($key, array $tags)
+    public function optimize(): bool
     {
         return true;
     }
 
     /**
-     * Get tags of an item by given key
-     *
-     * @param string $key
-     * @return string[]|FALSE
+     * {@inheritDoc}
      */
-    public function getTags($key)
+    public function setTags(string $key, array $tags): bool
     {
         return false;
     }
 
     /**
-     * Remove items matching given tags.
-     *
-     * If $disjunction only one of the given tags must match
-     * else all given tags must match.
-     *
-     * @param string[] $tags
-     * @param  bool  $disjunction
-     * @return bool
+     * {@inheritDoc}
      */
-    public function clearByTags(array $tags, $disjunction = false)
+    public function getTags(string $key): false|array
+    {
+        return false;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function clearByTags(array $tags, bool $disjunction = false): bool
     {
         return true;
     }
 
-    /* TotalSpaceCapableInterface */
-
     /**
-     * Get total space in bytes
-     *
-     * @return int|float
+     * {@inheritDoc}
      */
-    public function getTotalSpace()
+    public function getTotalSpace(): int
     {
         return PHP_INT_MAX;
     }
