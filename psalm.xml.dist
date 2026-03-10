@@ -18,12 +18,12 @@
         </ignoreFiles>
     </projectFiles>
     <issueHandlers>
-        <NonInvariantDocblockPropertyType>
+        <MissingOverrideAttribute>
             <errorLevel type="suppress">
-                <file name="test/integration/Psr/SimpleCache/BlackHoleIntegrationTest.php"/>
-                <file name="test/integration/Psr/CacheItemPool/BlackHoleIntegrationTest.php"/>
+                <directory name="src" />
+                <directory name="test" />
             </errorLevel>
-        </NonInvariantDocblockPropertyType>
+        </MissingOverrideAttribute>
     </issueHandlers>
     <plugins>
         <pluginClass class="Psalm\PhpUnitPlugin\Plugin"/>
